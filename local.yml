@@ -7,7 +7,7 @@
       tags: always
       apt: update_cache=yes
       changed_when: False
-      when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", Pop!_OS"]
+      when: ansible_distribution in ["Debian", "Ubuntu"]
     
     - name: pre-run | update package cache (Arch)
       tags: always
@@ -49,11 +49,11 @@
     apt:
       autoclean: yes
     changed_when: false
-    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "PoP!_OS"]
+    when: ansible_distribution in ["Debian", "Ubuntu"]
 
   - name: autoremove orphan packages (Debian, Ubuntu Linux Mint, PoP!_OS)
     tags: always
     apt:
       autoremove: yes
       purge: yes
-    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "PoP!_OS"]
+    when: ansible_distribution in ["Debian", "Ubuntu"]
