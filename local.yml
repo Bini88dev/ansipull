@@ -1,0 +1,59 @@
+# tasks to complete before running roles
+- hosts: all
+  tags: always
+  become: true
+  pre_tasks:
+    - name: pre-run | update package cache (Debian, Ubuntu, Linux Mint, PoP!_OS)
+      tags: always
+      apt: update_cache=yes
+      changed_when: False
+      when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", Pop!_OS"]
+    
+    - name: pre-run | update package cache (Arch)
+      tags: always
+      pacman: update_cache=yes
+      changed_when: False
+      when: ansible_distribution == "Archlinux"
+
+    - name: pre-run | update package cache (Fedora)
+      tags: always
+      dnf: update_cache=yes
+      changed_when: False
+      when: ansible_distribution == "Fedora"
+
+## run roles
+#- hosts: all
+#  tags: base
+#  become: true
+#  roles:
+#    - base
+#
+#- hosts: power
+#  tags: power
+#  become: true
+#  roles:
+#    - power
+#
+#- hosts: server
+#  tags: server
+#  become: true
+#  roles:
+#    - server
+
+# end of run cleanup and reporting
+- hosts: all
+  become: true
+  tasks:
+  - name: cleanup package cache (Debian, Ubuntu Linux Mint, PoP!_OS)
+    tags: always
+    apt:
+      autoclean: yes
+    changed_when: false
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "PoP!_OS"]
+
+  - name: autoremove orphan packages (Debian, Ubuntu Linux Mint, PoP!_OS)
+    tags: always
+    apt:
+      autoremove: yes
+      purge: yes
+    when: ansible_distribution in ["Debian", "Ubuntu", "Linux Mint", "PoP!_OS"]
